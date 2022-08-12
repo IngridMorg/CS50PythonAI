@@ -1,0 +1,152 @@
+This course will explore some of the ideas that make AI possible
+
+Search
+    Finding a solution to a problem
+Knowledge
+    Representing information and drawing references from it
+Uncertainty
+    Dealing with uncertain events using probability
+Optimization
+    Finding a better or the best way to solve a problem
+Learning
+    Improving performance based on access to data and experience
+Neural Networks
+    A program structure that is ins[ired by the human brain and is able to perform tasks effectively
+Language
+    Processing natural language which is produced and understood by humans
+
+Search problems
+    an agent with an initial state and goal state
+    returns a solution for how to get from initial to goal
+
+    Agent - entity that perceives its environment and acts upon it.
+    State - A configuration of an agent in its environment
+        initial state - the state from which the search algorithm starts
+    Actions - choices that can be made in a state, more precisely, actions that can be defined by a functions.
+        s = state
+        Actions(s) returns the set of actions that can be executed in state s as output
+    Transition model - A description of what state results from performing any applicable action in any state, can be
+        more precisely defined a a function that upon passing the stata and an action will return the state that follows
+        performing an action in a specific state
+    State space - The set of all states reachavle fro the initial state by any sequence of actions. Can be visualised as
+        a directed graph with states (nodes) and actions represented as arrows between nodes
+    Goal Test - the confition that determines whether a given state is a foal state
+    Path cost - a numerical cost associated with a fiven path
+
+Soving search problems
+
+    Solution - a sequence of actions that lead from the initial state to the goal state
+    Optimal solution - a solution that has the lowest path cost among all solutions
+
+    in the search process data is often stored in a node
+    node structure:
+        state - can be used in a goal test
+        parent node - that generated this node
+        action - to get to this node
+        path cost - from initial state
+
+    we can choose optimal paths after a goal test by comparing path costs
+
+    tracing back from a goal state to the initial state using a nodes structure is the sequence of actions we consider
+     to be the solution
+
+    nodes themselves are not a search mechanism. To sear we use the frontier, which is a mechanism that manages the
+    nodes. The frontier starts be containing an initial state and an empty set of explored items. It repeats the
+    following sequence of actions until a solution is reached:
+        1. if the frontier is empty
+            Stop - there is no solution
+            else:
+        2. remove a node from the frontier, we will now consider this node
+        3. if the node constans the goal state then,
+            return to the solution, then stop
+            else:
+        4. expand the node and add resulting node to the frontier
+        5. add the current node to the explored set
+        repeat
+
+    Search methods
+     how do we choose which node to be expanded???
+
+    DFS (uninformed)
+        stack approach
+        aka, frontier is managed as a stack data structure
+
+        pros
+            it it lucks out and always choose the right path to the solution by chance then DFS will take the least
+            possible time to reach the solution
+        cons
+            the found solution may not be optimal
+            at worst the algorithm will explore every possible path before dinfing the solutuon, therefore taking the
+            longest possible time before reaching the solution
+        example code:
+                # Define the function that removes a node from the frontier and returns it.
+                def remove(self):
+    	            # Terminate the search if the frontier is empty, because this means that there is no solution.
+                    if self.empty():
+                        raise Exception("empty frontier")
+                    else:
+        	            # Save the last item in the list (which is the newest node added)
+                        node = self.frontier[-1]
+                        # Save all the items on the list besides the last node (i.e. removing the last node)
+                        self.frontier = self.frontier[:-1]
+                        return node
+    BFS (uninformed)
+        uses a queue
+
+        pros
+            guaranteed to find the optimal solution
+
+        cons
+            almost guaranteed to take longer than the minimal time to run
+            at worst the algorithm will wake the longest possible time to run
+
+        # Define the function that removes a node from the frontier and returns it.
+        def remove(self):
+              # Terminate the search if the frontier is empty, because this means that there is no solution.
+            if self.empty():
+                raise Exception("empty frontier")
+            else:
+                # Save the oldest item on the list (which was the first one to be added)
+                node = self.frontier[0]
+                # Save all the items on the list besides the first one (i.e. removing the first node)
+                self.frontier = self.frontier[1:]
+                return node
+
+    uninformed algorithms - do not utilize any knowledge about the problem that they did not acquire through their own
+    exploration
+    informed algorithms - considers additional knowledge to try and improve its performance
+
+    Greedy BFS
+        expands the node that is the closest to the goal as determined by a heuristic function
+        efficiency depends on how good the heuristic function is
+        any heuristic can go wrong and lead th e algorithm down a slower path that it would not have chosen otherwise.
+            it is possible that an uniformed search algorithm ould provide a better and faster solution but it is less
+            likely to do so than an informed algorithm
+
+    A* search
+        consider heuristic and cost
+        (cost of path up until now + estimated cost to goal (heuristic))
+        For A* search a heuristic should be:
+            admissible - never overestimate the true cost
+            consistent = the estimated path cost to the foal of a new node in addition to the cost od transitioning to
+            it from the previous node is greater or equal oto the estimated path cost to the goal of the previous node
+
+    Adversarial search
+        algorithm faces an opponent that tries to achieve the opposite goal
+
+        minimax
+            the algorithm will know that when playing optimally, will pick the action that leads to a state with a lower
+             or higher value. alternating between minimising and maximising.
+
+        alpha beta pruning
+            skips some of the recursive computations that are unfavourable. After establishing the value of one action
+            if there is initial evidence that the following action an bring about the opponent getting a better score
+            than the already established action than there is no need to further investigate the action.
+        depth limited minimax
+            considers only a predefined number of moves before it stopes, without ever fetting to a terminal state.
+            however, this doesnt allow for getting a precise value for each action, since the end of the hypothetical
+            games has not been reached. To counter this depth-limited relies on an evaluation function that estimates
+            the expected utility fo the game from a given state. it then returns a positive or negative value that
+            represents how favorable the board is for one player versus the other. these values can then be used to
+            decide on the right action and the better evaluation function, the better the minimax algorithm that relies
+            on it.

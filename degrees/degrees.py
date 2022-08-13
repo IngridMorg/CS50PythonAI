@@ -92,8 +92,83 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+    # TODO - finish shortest_path
+    #print("source: ",source)
+    #print("target: ", target)
+
+    #following maze.py's structure
+    #number of nodes we have explored
+    nodesExplored = 0
+
+    #initialise the frontier using the source we have been given
+    start = Node(state= source, parent=None, action= None)
+    frontier = StackFrontier()
+    #add the start/source node to the frontier
+    frontier.add(start)
+    #print(start.state)
+    #form the neihbours
+    neighbours = neighbors_for_person(source)
+    #we now need to loop to find a solution
+    explored = {}
+    explored = set(explored)
+    while True:
+        if frontier.empty():
+            raise Exception("no solution")
+
+        #we need to choose a node from the frontier
+        node = frontier.remove()
+        #print("current node: ", node.state)
+        nodesExplored += 1
+
+        #check that the node is the goal
+        if (node.state == target):
+            #we have a solution
+            solution = []
+
+            #if this isnt the first node then we need to trace back up to generate the path
+            if node.parent == None:
+                print("two values are same")
+            while node.parent is not None:
+
+                solution.append((node.action,node.state))
+                node = node.parent
+            solution.reverse()
+            #print("solution: ", solution)
+            return solution
+
+        #we have now explored the node
+        #print("explored before: ",explored)
+        explored.add(node.state)
+        #print("explored after: ",explored)
+        neighbours = neighbors_for_person(node.state)
+        #we now need to add the neighbours to the frontier
+        for film, player in neighbours:
+            if(player != source):
+                #if the new player isnt the source then we can consider adding it to the frontier
+                #TODO - add check before we add to frontier
+                if player == target:
+                    print("target found")
+                    newNode = Node(state=player, parent=node, action=film)
+                    # we have a solution
+                    solution = []
+
+                    # if this isnt the first node then we need to trace back up to generate the path
+                    if newNode.parent == None:
+                        print("two values are same")
+                    while newNode.parent is not None:
+                        solution.append((newNode.action, newNode.state))
+                        newNode = newNode.parent
+                    solution.reverse()
+                    # print("solution: ", solution)
+                    return solution
+                elif not(frontier.contains_state(player)) and player not in explored:
+                    newNode = Node(state = player, parent= node, action=film)
+                    frontier.add(newNode)
+        #input("end?")
+                #print(film)
+                #child = Node(state = player, parent= node, action = film)
+                #frontier.add(child)
+
 
 
 def person_id_for_name(name):

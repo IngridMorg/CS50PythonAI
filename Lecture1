@@ -1,0 +1,7 @@
+Knowledge
+
+knowledge-based agents - agents that reason by operating on internal representations of knowledge
+sentence - an assertion about the world in a knowledge representation language
+
+check knowledge functions, looks at what we know and attempts to draw conclusions
+    we need to check to see if a model is tru or NOT true

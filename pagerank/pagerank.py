@@ -77,8 +77,17 @@ def transition_model(corpus, page, damping_factor):
     else:
         #we dont have a page that doesnt link to anything
         #so we need to do some more fun maths
+        #dampinging on its own probability:
+        prob1 = damping_factor / pages
+        #1- dampening factor probability:
+        prob2 = (1-damping_factor) / (pages +1)
 
-        raise NotImplementedError
+        #add the parameter page to the dictionar
+        model[page] = prob2
+        #iterate over the linked pages to add their proability
+        for key in corpus[page]:
+            model[key] = prob1 + prob2
+        return model
 
 
 def sample_pagerank(corpus, damping_factor, n):

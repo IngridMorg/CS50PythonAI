@@ -62,21 +62,23 @@ def transition_model(corpus, page, damping_factor):
     model = {}
     #if page has no putgoing links then the probability distrubution we should return will choose randomly among all
     #pages with equal probability
-
-    if(corpus(page) == None):
+    pages = len(corpus[page])
+    if(corpus[page] == None):
         #then we just choose randomly from all
-        prob = 1 / len(corpus)
+        prob = 1 / pages
         print(prob)
+        #ensure that the parameter page is also in the dictionary
+        model[page] = prob
         #add all they keys in the corpus to the new dictionary
         #and assign them their probability
-        for key in corpus:
+        for key in corpus[page]:
             model[key] = prob
         return model
     else:
         #we dont have a page that doesnt link to anything
         #so we need to do some more fun maths
 
-    raise NotImplementedError
+        raise NotImplementedError
 
 
 def sample_pagerank(corpus, damping_factor, n):

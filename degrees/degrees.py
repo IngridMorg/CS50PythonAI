@@ -145,7 +145,6 @@ def shortest_path(source, target):
         for film, player in neighbours:
             if(player != source):
                 #if the new player isnt the source then we can consider adding it to the frontier
-                #TODO - add check before we add to frontier
                 if player == target:
                     print("target found")
                     newNode = Node(state=player, parent=node, action=film)

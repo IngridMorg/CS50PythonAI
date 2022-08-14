@@ -1,0 +1,30 @@
+page rankk algorithm - a website is more important if it is linked to by other important websites, links from less
+important websites have their links weighted less.
+    this is quite a circular definition but there are multiple different ways of calculating this sort of senario
+
+Random surfer model
+    considers the behaviour of a hypothetical surfer on the internet who clicks on links at random.
+    The surfer starts on a random web page and then proceeds to randomly choose web pages to follow. (duplicate links on
+    the same page are treated as a single link, as well as links from a page to itself)
+    This way pageRank can be described as the probability that a random surfer is on that page at any given time, this
+    model handles weighting links by their importance as well
+    One way we can interpret this type of model is as a markov chain where each page represents a state and each page
+    has a transition model that chooses among its links ar random. At each time step the state switches to one of the
+    pages linked by the current state.
+    By sampling states randomly from the markov chain we can get an estimate for each pages PageRank
+        Start by choosing a page at random then keep following links at random, keeping track of how many times we have
+        visited each page. After all samples have been gathered (a number we have chosen in advance) the proportion of
+        the time we were on each page might be an estimate for that pages rank.
+    This definition can become problematic as you can have two pages that are only linked to each other and enter a
+    recursive loop that falsely ranks two pages at far too high a level and does not rank any other pages.
+    To ensure that we van always get to somwhere else in our corpus of web pages we can introduce a model dampening
+    factor (d)
+    With probability d (usually around 0.85) the random syfer will choose from one of the links on the current page at
+    random but otherwise (with probability 1 - d) the random surfer chooses one of all the pages in the corpus at random
+    (including the current page)
+
+Iterative algorithm
+    PR(p) = page rank of page p
+    two ways that the surfer could end up on page p
+        1. with probability 1-d, the sufer chose a page at random and ended up on page p
+        2. with probability d, the surfer followed a link from a page i to page p

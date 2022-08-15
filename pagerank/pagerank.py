@@ -12,6 +12,11 @@ def main():
         sys.exit("Usage: python pagerank.py corpus")
     corpus = crawl(sys.argv[1])
     print(corpus)
+
+    #TESTING
+
+
+
     ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
     print(f"PageRank Results from Sampling (n = {SAMPLES})")
     for page in sorted(ranks):
@@ -99,7 +104,36 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    #in random surfer we keep track of how many times a page will appear in our sample
+    #so initially our dictionary will consist of every page with an integer value representing the amount of times the page has been visitied
+    #then once all sample are complete we divide each of the integers by n to find the probability
+
+    #we are going to loop n-1 times as the first time we are going to choose a page at random
+    pages = len(corpus)
+    firstPage = random.choice(list(corpus.keys()))
+    #initialise the dictionary this function will return
+    model = {}
+    for key in corpus:
+        model[key] = 0
+    model[firstPage] = 1
+    #use transition model to generate the first probability distrubution
+    probModel = transition_model(corpus,firstPage, damping_factor)
+    for i in range(0,n-1):
+        #using probModel we need to determine what page to visit next
+        pages = []
+        probs = []
+        for key,val in probModel.items():
+            pages.append(key)
+            probs.append(val)
+
+        sample = random.choices(pages, weights=probs)[0]
+        model[sample] +=1
+        probModel = transition_model(corpus,sample, damping_factor)
+    for i in model:
+        model[i] = model[i] / n
+
+    print(model)
+    return model
 
 
 def iterate_pagerank(corpus, damping_factor):

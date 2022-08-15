@@ -14,7 +14,29 @@ def main():
     print(corpus)
 
     #TESTING
+    # initialise the dictionary 'model' that we will return from this function
+    pages = len(corpus)
+    # initialise the dictionary this function will return
+    model = {}
+    # initialise all values to 1/(number of pages in corpus)
+    for key in corpus:
+        model[key] = 1 / pages
 
+    # this variable will become true once we have no page change in size by more than 0.001
+    noChange = False
+    while noChange == False:
+        for p in corpus:
+            # number of pages the current page is linked to
+            iLen = len(corpus[p])
+            sum = 0
+            print("loop")
+            for k in corpus[p]:
+                print(k)
+                sum += model[k]
+                print(model[k])
+
+            noChange = True
+            break
 
 
     ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
@@ -125,7 +147,7 @@ def sample_pagerank(corpus, damping_factor, n):
         for key,val in probModel.items():
             pages.append(key)
             probs.append(val)
-
+        #this random function allows us to add an array that we can use for weightings
         sample = random.choices(pages, weights=probs)[0]
         model[sample] +=1
         probModel = transition_model(corpus,sample, damping_factor)
@@ -145,7 +167,50 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    #initialise the dictionary 'model' that we will return from this function
+    pages = len(corpus)
+    # initialise the dictionary this function will return
+    model = {}
+    #initialise all values to 1/(number of pages in corpus)
+    for key in corpus:
+        model[key] = 1 / pages
+
+    #this variable will become true once we have no page change in size by more than 0.001
+    noChange = False
+    while noChange == False:
+        change = 0
+        for p in corpus:
+            #number of pages the current page is linked to
+            iLen = len(corpus[p])
+            if(iLen == 0):
+                #then we consider this page as having one link to every page in the corpus
+                sum = 0
+                for k in corpus:
+                    # we want the page rank of i divided by the number of links i has
+                    temp = model[k]
+                    temp = temp / len(corpus[k])
+                    sum += temp
+                sum = sum * damping_factor
+                newProb = ((1 - damping_factor) / pages) + sum
+            else:
+                sum = 0
+                for i in corpus[p]:
+                    #we want the page rank of i divided by the number of links i has
+                    temp = model[i]
+                    temp = temp / len(corpus[i])
+                    sum += temp
+                #multiple the sum by the dampening factor
+                sum = sum * damping_factor
+                newProb = ((1-damping_factor)/pages) + sum
+            if(abs(model[p]-newProb)<=0.001):
+                change+=1
+            model[p] = newProb
+        if change == pages:
+            noChange = True
+
+
+
+    return model
 
 
 if __name__ == "__main__":
